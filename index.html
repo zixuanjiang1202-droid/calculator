@@ -709,7 +709,7 @@
 
     <!-- Surrender risk warning -->
     <div class="risk-card" id="riskCard">
-      <div class="risk-title">⚠️ 前期退保风险提示</div>
+      <div class="risk-title">⚠️ 长期持有才能发挥复利威力</div>
       <div class="risk-bar-container">
         <div class="risk-bar-fill loss" id="riskBar" style="width:0%">
           <span id="riskBarText"></span>
@@ -762,7 +762,7 @@
         </div>
       </div>
       <div id="earlyWarning" style="display:none;margin-top:12px;padding:10px 12px;background:#FFF3E0;border-radius:10px;font-size:12px;color:#E65100;line-height:1.6;">
-        ⚠️ <strong>注意：</strong>储蓄险前8年退保会有较大损失，保证现金价值远低于已缴保费。请确保这笔资金在8年内无需动用。
+        ⚠️ <strong>注意：</strong>储蓄险是长期理财工具，前8年提取会有损失。建议用不影响日常生活的闲置资金投入，长期持有才能享受复利增长的最大收益。
       </div>
     </div>
 
@@ -812,7 +812,7 @@
       <div class="compare-diff" id="compareDiff"></div>
 
       <div class="disclaimer">
-        ⚠️ <strong>重要提示：</strong>本计算器基于香港主流储蓄分红险的公开数据建模（参考保诚信守明天、特级隽升II等产品的历史分红实现率及预期IRR），但<strong>不代表任何具体产品的实际收益</strong>。"仅保证"栏模拟保证现金价值增长曲线（前期低，长期约0.5-1% IRR）；"含预期红利"栏模拟含归原红利及特别红利的总现金价值（长期约5-5.5% IRR）。预期回本期约为第8年。非保证红利受投资表现、分红政策等因素影响，可能高于或低于演示。前5-8年退保可能产生损失。实际方案请以保险公司官方计划书为准。本计算器不构成任何投资建议或要约。
+        ⚠️ <strong>重要提示：</strong>本计算器基于香港主流储蓄分红险的公开数据建模，<strong>不代表任何具体产品的实际收益</strong>。"仅保证"栏模拟保证现金价值增长；"含预期红利"栏模拟含红利的总现金价值。非保证红利受投资表现、分红政策等因素影响，可能高于或低于演示。前期退保可能产生损失。实际方案请以保险公司官方计划书为准。本计算器不构成任何投资建议或要约。
       </div>
     </div>
 
@@ -917,8 +917,8 @@ function computeGuaranteed(budget, payYears, totalYears) {
     if (y <= payYears) totalPaid += budget;
 
     let ratio;
-    if (y === 1) ratio = 0.15;
-    else if (y === 2) ratio = 0.28;
+    if (y === 1) ratio = 0;
+    else if (y === 2) ratio = 0;
     else if (y === 3) ratio = 0.38;
     else if (y === 4) ratio = 0.46;
     else if (y === 5) ratio = 0.55;
@@ -946,9 +946,9 @@ function computeWithBonus(budget, payYears, totalYears) {
 
     let value;
     if (y === 1) {
-      value = totalPaid * 0.35;
+      value = 0;
     } else if (y === 2) {
-      value = totalPaid * 0.48;
+      value = 0;
     } else if (y === 3) {
       value = totalPaid * 0.58;
     } else if (y === 4) {
@@ -1071,10 +1071,10 @@ function calculate() {
   setTimeout(() => { riskBar.style.width = Math.max(y1LossPct, 10) + '%'; }, 200);
 
   riskDetail.innerHTML =
-    `<strong>第1年</strong>退保：亏损约 <strong>${y1LossPct}%</strong>，仅拿回约 ¥${formatMoney(withBonusValues[0])}（已缴 ¥${formatMoney(budget)}）<br>` +
-    `<strong>第2年</strong>退保：亏损约 <strong>${y2LossPct}%</strong>，仅拿回约 ¥${formatMoney(withBonusValues[1] || 0)}<br>` +
+    `<strong>第1-2年</strong>退保：<strong>无法拿回任何资金</strong><br>` +
+    `<strong>第3-7年</strong>退保：仅能拿回部分已缴保费<br>` +
     (breakevenYear > 0 ? `<strong>第${breakevenYear}年</strong>起预计回本，之后持有越久收益越高<br>` : '') +
-    `<strong>建议：</strong>请确保投入的资金在5年内无需动用`;
+    `<strong>建议：</strong>储蓄险是长期理财工具，适合用闲置资金做10年以上的规划，持有时间越长收益越可观`;
 
   // Summary
   const endAge = age + totalYears;
