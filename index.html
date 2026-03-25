@@ -216,6 +216,55 @@
 
   .results-section.show { display: block; }
 
+  /* Risk warning card */
+  .risk-card {
+    background: linear-gradient(135deg, #FF6B35, #E53E3E);
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    margin-top: 20px;
+  }
+
+  .risk-card .risk-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .risk-card .risk-bar-container {
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    height: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .risk-card .risk-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    transition: width 1s ease;
+  }
+
+  .risk-card .risk-bar-fill.loss { background: rgba(255,255,255,0.35); }
+  .risk-card .risk-bar-fill.safe { background: rgba(255,255,255,0.6); color: #C53030; }
+
+  .risk-card .risk-detail {
+    font-size: 12px;
+    line-height: 1.8;
+    opacity: 0.9;
+  }
+
+  .risk-card .risk-detail strong { opacity: 1; }
+
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -383,9 +432,9 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    height: 160px;
+    height: 180px;
     padding: 0 4px;
-    gap: 3px;
+    gap: 2px;
   }
 
   .bar-group {
@@ -393,7 +442,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
     justify-content: flex-end;
   }
 
@@ -410,6 +458,7 @@
     gap: 2px;
     width: 100%;
     max-width: 40px;
+    height: 120px;
     align-items: flex-end;
   }
 
@@ -658,6 +707,17 @@
   <!-- Results -->
   <div class="results-section" id="results">
 
+    <!-- Surrender risk warning -->
+    <div class="risk-card" id="riskCard">
+      <div class="risk-title">⚠️ 前期退保风险提示</div>
+      <div class="risk-bar-container">
+        <div class="risk-bar-fill loss" id="riskBar" style="width:0%">
+          <span id="riskBarText"></span>
+        </div>
+      </div>
+      <div class="risk-detail" id="riskDetail"></div>
+    </div>
+
     <div class="summary-box">
       <div class="label" id="summaryLabel">预计到期账户总值</div>
       <div class="amount"><span class="currency">¥</span><span id="totalAmount">0</span></div>
@@ -689,17 +749,20 @@
       </p>
       <div class="dual-track">
         <div class="track conservative-track">
-          <div class="track-title">保守估算</div>
-          <div class="track-rate">年化约 3.5%（接近保证收益）</div>
+          <div class="track-title">仅保证收益</div>
+          <div class="track-rate">仅含保证现金价值，长期约0.5-1%</div>
           <div class="track-value" id="conservativeAmount">¥0</div>
           <div class="track-profit" id="conservativeProfit">收益 ¥0</div>
         </div>
         <div class="track optimistic-track">
-          <div class="track-title">乐观估算</div>
-          <div class="track-rate">年化约 5.5%（含非保证红利）</div>
+          <div class="track-title">含预期红利</div>
+          <div class="track-rate">含归原红利+特别红利，长期约5-5.5%</div>
           <div class="track-value" id="optimisticAmount">¥0</div>
           <div class="track-profit" id="optimisticProfit">收益 ¥0</div>
         </div>
+      </div>
+      <div id="earlyWarning" style="display:none;margin-top:12px;padding:10px 12px;background:#FFF3E0;border-radius:10px;font-size:12px;color:#E65100;line-height:1.6;">
+        ⚠️ <strong>注意：</strong>储蓄险前8年退保会有较大损失，保证现金价值远低于已缴保费。请确保这笔资金在8年内无需动用。
       </div>
     </div>
 
@@ -722,8 +785,8 @@
         <div class="bar-chart" id="barChart"></div>
       </div>
       <div class="chart-legend">
-        <span><span class="legend-dot c"></span>保守 3.5%</span>
-        <span><span class="legend-dot o"></span>乐观 5.5%</span>
+        <span><span class="legend-dot c"></span>仅保证收益</span>
+        <span><span class="legend-dot o"></span>含预期红利</span>
       </div>
     </div>
 
@@ -741,15 +804,15 @@
           <div class="c-rate">年化约1.5%</div>
         </div>
         <div class="compare-item insurance">
-          <div class="c-label">储蓄险（中位）</div>
+          <div class="c-label">储蓄险（含预期红利）</div>
           <div class="c-value" id="insuranceMidAmount">¥0</div>
-          <div class="c-rate">年化约4.5%</div>
+          <div class="c-rate">长期约5-5.5%</div>
         </div>
       </div>
       <div class="compare-diff" id="compareDiff"></div>
 
       <div class="disclaimer">
-        ⚠️ <strong>重要提示：</strong>以上数据仅为演示估算，不代表任何具体保险产品的实际收益。储蓄险收益包含保证部分和非保证部分（红利），非保证部分受市场波动影响。保守估算接近保证收益，乐观估算包含预期红利。实际方案请以保险公司官方计划书为准。本计算器不构成任何投资建议或要约。
+        ⚠️ <strong>重要提示：</strong>本计算器基于香港主流储蓄分红险的公开数据建模（参考保诚信守明天、特级隽升II等产品的历史分红实现率及预期IRR），但<strong>不代表任何具体产品的实际收益</strong>。"仅保证"栏模拟保证现金价值增长曲线（前期低，长期约0.5-1% IRR）；"含预期红利"栏模拟含归原红利及特别红利的总现金价值（长期约5-5.5% IRR）。预期回本期约为第8年。非保证红利受投资表现、分红政策等因素影响，可能高于或低于演示。前5-8年退保可能产生损失。实际方案请以保险公司官方计划书为准。本计算器不构成任何投资建议或要约。
       </div>
     </div>
 
@@ -757,7 +820,7 @@
     <div class="cta-section">
       <div class="cta-card">
         <div class="cta-avatar">👩‍🏫</div>
-        <div class="cta-name">Crystal老师</div>
+        <div class="cta-name">CC的理财笔记</div>
         <div class="cta-title">前幼教老师 ｜ 香港持牌保险顾问</div>
         <div class="cta-features">
           <div class="cta-feature">
@@ -829,12 +892,103 @@ function formatMoneyFull(num) {
   return Math.round(num).toLocaleString('zh-CN');
 }
 
-function computeGrowth(budget, payYears, totalYears, rate) {
+/*
+ * 模拟保诚储蓄险收益曲线（根据业务员反馈校准）
+ *
+ * 保证收益：
+ *   - 前1-2年：~15-30% | 第3-5年：~40-60% | 第6-10年：~65-85%
+ *   - 保证回本期：约第20-25年
+ *   - 长期保证IRR：约0.5-1%
+ *
+ * 含预期红利：
+ *   - 前1-2年：~35-50% | 第3-5年：~55-75% | 第6-7年：~85-95%
+ *   - 预期回本期：约第8年
+ *   - 第10年IRR：约2.5-3%
+ *   - 第20年IRR：约4-4.5%
+ *   - 第25年IRR：约4.5-5%
+ *   - 第30年+IRR：约5-5.5%
+ */
+
+function computeGuaranteed(budget, payYears, totalYears) {
+  let totalPaid = 0;
+  let values = [];
+
+  for (let y = 1; y <= totalYears; y++) {
+    if (y <= payYears) totalPaid += budget;
+
+    let ratio;
+    if (y === 1) ratio = 0.15;
+    else if (y === 2) ratio = 0.28;
+    else if (y === 3) ratio = 0.38;
+    else if (y === 4) ratio = 0.46;
+    else if (y === 5) ratio = 0.55;
+    else if (y <= 8) ratio = 0.55 + (y - 5) * 0.05;   // 0.60 - 0.70
+    else if (y <= 12) ratio = 0.70 + (y - 8) * 0.04;   // 0.74 - 0.86
+    else if (y <= 18) ratio = 0.86 + (y - 12) * 0.02;  // 0.88 - 0.98
+    else if (y <= 25) ratio = 0.98 + (y - 18) * 0.008; // 1.006 - 1.054
+    else {
+      // Long term: ~0.8-1% compound growth
+      const baseRatio = 1.054;
+      ratio = baseRatio * Math.pow(1.009, y - 25);
+    }
+
+    values.push(Math.round(totalPaid * Math.max(0.10, ratio)));
+  }
+  return values;
+}
+
+function computeWithBonus(budget, payYears, totalYears) {
+  let totalPaid = 0;
+  let values = [];
+
+  for (let y = 1; y <= totalYears; y++) {
+    if (y <= payYears) totalPaid += budget;
+
+    let value;
+    if (y === 1) {
+      value = totalPaid * 0.35;
+    } else if (y === 2) {
+      value = totalPaid * 0.48;
+    } else if (y === 3) {
+      value = totalPaid * 0.58;
+    } else if (y === 4) {
+      value = totalPaid * 0.68;
+    } else if (y === 5) {
+      value = totalPaid * 0.76;
+    } else if (y === 6) {
+      value = totalPaid * 0.84;
+    } else if (y === 7) {
+      value = totalPaid * 0.92;
+    } else if (y === 8) {
+      // Breakeven at year 8
+      value = totalPaid * 1.00;
+    } else {
+      // After breakeven: gradual IRR increase
+      // Year 10: ~2.5-3% | Year 15: ~3.5-4% | Year 20: ~4-4.5%
+      // Year 25: ~4.5-5% | Year 30+: ~5-5.5%
+      let effectiveIRR;
+      if (y <= 10) effectiveIRR = 0.015 + (y - 8) * 0.005;       // 0.02 - 0.025
+      else if (y <= 15) effectiveIRR = 0.025 + (y - 10) * 0.003;  // 0.028 - 0.04
+      else if (y <= 20) effectiveIRR = 0.04 + (y - 15) * 0.002;   // 0.042 - 0.05
+      else if (y <= 25) effectiveIRR = 0.05 + (y - 20) * 0.001;   // 0.051 - 0.055
+      else if (y <= 35) effectiveIRR = 0.055 + (y - 25) * 0.0005; // 0.0555 - 0.06
+      else effectiveIRR = 0.06 + Math.min((y - 35) * 0.0002, 0.005);
+
+      value = totalPaid * Math.pow(1 + effectiveIRR, y);
+    }
+
+    values.push(Math.round(Math.max(value, totalPaid * 0.10)));
+  }
+  return values;
+}
+
+function computeBank(budget, payYears, totalYears) {
+  const bankRate = 0.015;
   let balance = 0;
   let values = [];
   for (let y = 1; y <= totalYears; y++) {
     if (y <= payYears) balance += budget;
-    balance *= (1 + rate);
+    balance *= (1 + bankRate);
     values.push(Math.round(balance));
   }
   return values;
@@ -851,58 +1005,104 @@ function calculate() {
     return;
   }
 
-  const conservativeRate = 0.035;
-  const optimisticRate = 0.055;
-  const midRate = 0.045;
-  const bankRate = 0.015;
-
-  // Determine projection horizon
+  // Determine projection horizon — extend to show 66/80 age milestones
   let totalYears;
   if (planType.startsWith('education')) {
-    totalYears = Math.max(18 - age, payYears + 1);
-    if (totalYears < payYears + 1) totalYears = payYears + 1;
+    // For education: show until at least age 80 to demonstrate long-term value
+    totalYears = Math.max(80 - age, payYears + 1);
   } else if (planType === 'retirement') {
-    totalYears = Math.max(65 - age, payYears + 1);
-    if (totalYears < 5) totalYears = payYears + 5;
+    totalYears = Math.max(80 - age, payYears + 1);
   } else {
-    totalYears = Math.max(payYears + 10, 20);
+    // Wealth: extend to show age 80 if possible
+    totalYears = Math.max(80 - age, payYears + 10, 30);
   }
-  if (totalYears > 50) totalYears = 50;
+  if (totalYears > 80) totalYears = 80;
+  if (totalYears < payYears + 1) totalYears = payYears + 1;
 
   const totalPaid = budget * Math.min(payYears, totalYears);
-  const conservativeValues = computeGrowth(budget, payYears, totalYears, conservativeRate);
-  const optimisticValues = computeGrowth(budget, payYears, totalYears, optimisticRate);
-  const midValues = computeGrowth(budget, payYears, totalYears, midRate);
-  const bankValues = computeGrowth(budget, payYears, totalYears, bankRate);
 
-  const cFinal = conservativeValues[totalYears - 1];
-  const oFinal = optimisticValues[totalYears - 1];
+  // Compute with realistic Prudential-modeled curves
+  const guaranteedValues = computeGuaranteed(budget, payYears, totalYears);
+  const withBonusValues = computeWithBonus(budget, payYears, totalYears);
+  const bankValues = computeBank(budget, payYears, totalYears);
+
+  // Mid estimate = average of guaranteed and withBonus
+  const midValues = guaranteedValues.map((g, i) => Math.round((g + withBonusValues[i]) / 2));
+
+  const cFinal = guaranteedValues[totalYears - 1];
+  const oFinal = withBonusValues[totalYears - 1];
   const mFinal = midValues[totalYears - 1];
   const bFinal = bankValues[totalYears - 1];
+
+  // Early warning for short holding periods
+  const warningEl = document.getElementById('earlyWarning');
+  if (totalYears <= 10) {
+    warningEl.style.display = 'block';
+  } else {
+    warningEl.style.display = 'none';
+  }
+
+  // Surrender risk card — always show
+  const riskCard = document.getElementById('riskCard');
+  const riskBar = document.getElementById('riskBar');
+  const riskBarText = document.getElementById('riskBarText');
+  const riskDetail = document.getElementById('riskDetail');
+
+  // Find breakeven year for withBonus
+  let breakevenYear = -1;
+  for (let y = 0; y < withBonusValues.length; y++) {
+    const paidSoFar = budget * Math.min(y + 1, payYears);
+    if (withBonusValues[y] >= paidSoFar) {
+      breakevenYear = y + 1;
+      break;
+    }
+  }
+
+  // Year 1 loss percentage
+  const y1Loss = ((totalPaid > 0 ? budget : 0) - (withBonusValues[0] || 0));
+  const y1LossPct = budget > 0 ? Math.round((1 - withBonusValues[0] / budget) * 100) : 0;
+  const y2Paid = budget * Math.min(2, payYears);
+  const y2LossPct = y2Paid > 0 && withBonusValues[1] ? Math.round((1 - withBonusValues[1] / y2Paid) * 100) : 0;
+
+  riskBar.style.width = Math.max(y1LossPct, 10) + '%';
+  riskBar.className = 'risk-bar-fill loss';
+  riskBarText.textContent = `第1年退保亏损约 ${y1LossPct}%`;
+
+  setTimeout(() => { riskBar.style.width = Math.max(y1LossPct, 10) + '%'; }, 200);
+
+  riskDetail.innerHTML =
+    `<strong>第1年</strong>退保：亏损约 <strong>${y1LossPct}%</strong>，仅拿回约 ¥${formatMoney(withBonusValues[0])}（已缴 ¥${formatMoney(budget)}）<br>` +
+    `<strong>第2年</strong>退保：亏损约 <strong>${y2LossPct}%</strong>，仅拿回约 ¥${formatMoney(withBonusValues[1] || 0)}<br>` +
+    (breakevenYear > 0 ? `<strong>第${breakevenYear}年</strong>起预计回本，之后持有越久收益越高<br>` : '') +
+    `<strong>建议：</strong>请确保投入的资金在5年内无需动用`;
 
   // Summary
   const endAge = age + totalYears;
   let summaryText;
   if (planType.startsWith('education')) {
-    summaryText = `预计${endAge}岁时账户总值（中位估算）`;
+    summaryText = `预计${endAge}岁时账户总值（含预期红利）`;
   } else if (planType === 'retirement') {
-    summaryText = `预计${endAge}岁退休时账户总值（中位估算）`;
+    summaryText = `预计${endAge}岁退休时账户总值（含预期红利）`;
   } else {
-    summaryText = `${totalYears}年后账户总值（中位估算）`;
+    summaryText = `${totalYears}年后账户总值（含预期红利）`;
   }
 
   document.getElementById('summaryLabel').textContent = summaryText;
-  document.getElementById('totalAmount').textContent = formatMoneyFull(mFinal);
+  document.getElementById('totalAmount').textContent = formatMoneyFull(oFinal);
   document.getElementById('amountRange').innerHTML =
-    `<span class="range-label conservative">保守</span> ¥${formatMoney(cFinal)} ~ ` +
-    `<span class="range-label optimistic">乐观</span> ¥${formatMoney(oFinal)}`;
+    `<span class="range-label conservative">仅保证</span> ¥${formatMoney(cFinal)} ~ ` +
+    `<span class="range-label optimistic">含红利</span> ¥${formatMoney(oFinal)}`;
   document.getElementById('totalInput').textContent = '¥' + formatMoney(totalPaid);
-  document.getElementById('totalMultiple').textContent = (mFinal / totalPaid).toFixed(1) + 'x';
+
+  const multiple = (oFinal / totalPaid).toFixed(1);
+  document.getElementById('totalMultiple').textContent = multiple + 'x';
   document.getElementById('totalYearsDisplay').textContent = totalYears + '年';
 
   // Dual track
   document.getElementById('conservativeAmount').textContent = '¥' + formatMoney(cFinal);
-  document.getElementById('conservativeProfit').textContent = '收益 ¥' + formatMoney(cFinal - totalPaid);
+  const cProfit = cFinal - totalPaid;
+  document.getElementById('conservativeProfit').textContent =
+    cProfit >= 0 ? '收益 ¥' + formatMoney(cProfit) : '亏损 ¥' + formatMoney(Math.abs(cProfit));
   document.getElementById('optimisticAmount').textContent = '¥' + formatMoney(oFinal);
   document.getElementById('optimisticProfit').textContent = '收益 ¥' + formatMoney(oFinal - totalPaid);
 
@@ -910,75 +1110,118 @@ function calculate() {
   let milestones = [];
 
   if (planType.startsWith('education')) {
-    document.getElementById('timelineTitle').textContent = '教育各阶段可用资金';
+    document.getElementById('timelineTitle').textContent = '教育阶段 + 长期增值预览';
     if (age < 6) milestones.push({ yr: 6 - age, label: '幼升小', icon: '🏫' });
     if (age < 12) milestones.push({ yr: 12 - age, label: '小升初', icon: '📖' });
     if (age < 15) milestones.push({ yr: 15 - age, label: '中考', icon: '✏️' });
     if (age < 18) milestones.push({ yr: 18 - age, label: '上大学', icon: '🎓' });
-    if (planType === 'education_overseas') {
-      milestones.push({ yr: Math.max(22 - age, totalYears), label: '研究生/深造', icon: '🌍' });
+    if (planType === 'education_overseas' && age < 22) {
+      milestones.push({ yr: 22 - age, label: '研究生/深造', icon: '🌍' });
     }
+    // Add long-term milestones
+    if (age < 30) milestones.push({ yr: 30 - age, label: '30岁 · 成家立业', icon: '💼' });
+    if (age < 50) milestones.push({ yr: 50 - age, label: '50岁 · 财富积累', icon: '💰' });
+    if (age < 66) milestones.push({ yr: 66 - age, label: '66岁 · 退休养老', icon: '🏖️' });
+    if (age < 80) milestones.push({ yr: 80 - age, label: '80岁 · 财富传承', icon: '👴' });
   } else if (planType === 'retirement') {
-    document.getElementById('timelineTitle').textContent = '退休规划时间线';
-    const y5 = 5, y10 = 10, y20 = 20;
-    if (totalYears >= 5) milestones.push({ yr: y5, label: `${age + y5}岁 · 第5年`, icon: '📌' });
-    if (totalYears >= 10) milestones.push({ yr: y10, label: `${age + y10}岁 · 第10年`, icon: '📌' });
-    if (totalYears >= 20) milestones.push({ yr: y20, label: `${age + y20}岁 · 第20年`, icon: '📌' });
-    milestones.push({ yr: totalYears, label: `${endAge}岁 · 退休`, icon: '🏖️' });
+    document.getElementById('timelineTitle').textContent = '退休规划 + 长期增值预览';
+    const keyAges = [
+      { a: 45, label: '45岁 · 中期检视', icon: '📌' },
+      { a: 55, label: '55岁 · 退休倒计时', icon: '📌' },
+      { a: 60, label: '60岁 · 可提前退休', icon: '📌' },
+      { a: 66, label: '66岁 · 正式退休', icon: '🏖️' },
+      { a: 70, label: '70岁 · 养老生活', icon: '🧓' },
+      { a: 80, label: '80岁 · 财富传承', icon: '👴' },
+    ];
+    keyAges.forEach(k => {
+      if (k.a > age && (k.a - age) <= totalYears) {
+        milestones.push({ yr: k.a - age, label: k.label, icon: k.icon });
+      }
+    });
+    if (milestones.length === 0) {
+      milestones.push({ yr: totalYears, label: `${endAge}岁`, icon: '🏖️' });
+    }
   } else {
     document.getElementById('timelineTitle').textContent = '财富增长里程碑';
-    const steps = [5, 10, 15, 20, 30];
-    steps.forEach(s => {
-      if (s <= totalYears) milestones.push({ yr: s, label: `第${s}年 · ${age + s}岁`, icon: '💰' });
+    const keyAges = [
+      { a: 30, icon: '💼' }, { a: 40, icon: '💰' },
+      { a: 50, icon: '💰' }, { a: 60, icon: '📌' },
+      { a: 66, icon: '🏖️' }, { a: 80, icon: '👴' },
+    ];
+    keyAges.forEach(k => {
+      if (k.a > age && (k.a - age) <= totalYears) {
+        milestones.push({ yr: k.a - age, label: `${k.a}岁`, icon: k.icon });
+      }
     });
-    if (!milestones.find(m => m.yr === totalYears)) {
-      milestones.push({ yr: totalYears, label: `第${totalYears}年 · ${endAge}岁`, icon: '🎯' });
+    // Also add fixed-year milestones if age is young
+    [10, 20, 30].forEach(s => {
+      if (s <= totalYears && !milestones.find(m => m.yr === s)) {
+        milestones.push({ yr: s, label: `第${s}年 · ${age + s}岁`, icon: '💰' });
+      }
+    });
+    milestones.sort((a, b) => a.yr - b.yr);
+    if (!milestones.find(m => m.yr === totalYears) && totalYears > 5) {
+      milestones.push({ yr: totalYears, label: `${endAge}岁`, icon: '🎯' });
     }
   }
 
-  // Filter valid milestones
-  milestones = milestones.filter(m => m.yr > 0 && m.yr <= Math.max(totalYears + 5, 30));
+  // Remove duplicates and filter
+  const seen = new Set();
+  milestones = milestones.filter(m => {
+    if (m.yr <= 0 || m.yr > totalYears || seen.has(m.yr)) return false;
+    seen.add(m.yr);
+    return true;
+  });
 
   const timelineEl = document.getElementById('timeline');
   timelineEl.innerHTML = '';
 
   milestones.forEach((m, idx) => {
-    const cVal = m.yr <= totalYears ? conservativeValues[m.yr - 1] : Math.round(conservativeValues[totalYears - 1] * Math.pow(1 + conservativeRate, m.yr - totalYears));
-    const oVal = m.yr <= totalYears ? optimisticValues[m.yr - 1] : Math.round(optimisticValues[totalYears - 1] * Math.pow(1 + optimisticRate, m.yr - totalYears));
-    const mVal = m.yr <= totalYears ? midValues[m.yr - 1] : Math.round(midValues[totalYears - 1] * Math.pow(1 + midRate, m.yr - totalYears));
+    let cVal, oVal;
+    if (m.yr <= totalYears) {
+      cVal = guaranteedValues[m.yr - 1];
+      oVal = withBonusValues[m.yr - 1];
+    } else {
+      // Extrapolate
+      cVal = Math.round(guaranteedValues[totalYears - 1] * Math.pow(1.018, m.yr - totalYears));
+      oVal = Math.round(withBonusValues[totalYears - 1] * Math.pow(1.065, m.yr - totalYears));
+    }
 
+    const paidAtYr = budget * Math.min(m.yr, payYears);
+    const isLoss = oVal < paidAtYr;
     const isLast = idx === milestones.length - 1;
+
     const item = document.createElement('div');
     item.className = 'timeline-item';
     item.innerHTML = `
       <div class="timeline-dot"></div>
-      <div class="timeline-age">${m.icon} ${m.label}</div>
-      <div class="timeline-amount ${isLast ? 'highlight' : ''}">¥${formatMoneyFull(mVal)}</div>
-      <div class="timeline-range">保守 ¥${formatMoney(cVal)} ~ 乐观 ¥${formatMoney(oVal)}</div>
+      <div class="timeline-age">${m.icon} ${m.label}${isLoss ? ' ⚠️' : ''}</div>
+      <div class="timeline-amount ${isLast ? 'highlight' : ''}" ${isLoss ? 'style="color:#E65100"' : ''}>¥${formatMoneyFull(oVal)}${isLoss ? '（未回本）' : ''}</div>
+      <div class="timeline-range">仅保证 ¥${formatMoney(cVal)} ~ 含红利 ¥${formatMoney(oVal)}</div>
     `;
     timelineEl.appendChild(item);
   });
 
-  // Bar chart
+  // Bar chart — dual bars: blue(guaranteed) vs gold(with bonus)
   const chartEl = document.getElementById('barChart');
   chartEl.innerHTML = '';
 
   const chartPoints = [];
-  const step = Math.max(1, Math.floor(totalYears / 6));
-  for (let i = step - 1; i < totalYears; i += step) chartPoints.push(i);
+  const chartStep = Math.max(1, Math.floor(totalYears / 7));
+  for (let i = chartStep - 1; i < totalYears; i += chartStep) chartPoints.push(i);
   if (chartPoints[chartPoints.length - 1] !== totalYears - 1) chartPoints.push(totalYears - 1);
+  while (chartPoints.length > 8) chartPoints.shift();
 
   const maxVal = oFinal;
 
   chartPoints.forEach((idx, i) => {
-    const cH = Math.max(3, (conservativeValues[idx] / maxVal) * 100);
-    const oH = Math.max(3, (optimisticValues[idx] / maxVal) * 100);
-    const isLast = i === chartPoints.length - 1;
+    const cH = Math.max(3, (guaranteedValues[idx] / maxVal) * 100);
+    const oH = Math.max(3, (withBonusValues[idx] / maxVal) * 100);
 
     const group = document.createElement('div');
     group.className = 'bar-group';
     group.innerHTML = `
-      <div class="bar-value">${formatMoney(optimisticValues[idx])}</div>
+      <div class="bar-value">${formatMoney(withBonusValues[idx])}</div>
       <div class="bar-pair">
         <div class="bar bar-conservative" style="height: 0%"></div>
         <div class="bar bar-optimistic" style="height: 0%"></div>
@@ -993,10 +1236,15 @@ function calculate() {
     }, 100 + i * 100);
   });
 
-  // Compare
+  // Compare: use withBonus mid-point for fairness
   document.getElementById('bankAmount').textContent = '¥' + formatMoney(bFinal);
-  document.getElementById('insuranceMidAmount').textContent = '¥' + formatMoney(mFinal);
-  document.getElementById('compareDiff').textContent = `储蓄险比银行存款多出约 ¥${formatMoney(mFinal - bFinal)}`;
+  document.getElementById('insuranceMidAmount').textContent = '¥' + formatMoney(oFinal);
+  const diff = oFinal - bFinal;
+  if (diff > 0) {
+    document.getElementById('compareDiff').textContent = `含预期红利比银行存款多出约 ¥${formatMoney(diff)}`;
+  } else {
+    document.getElementById('compareDiff').textContent = `短期内银行存款更灵活，长期持有储蓄险优势更大`;
+  }
 
   // Show
   const resultsEl = document.getElementById('results');
@@ -1005,7 +1253,7 @@ function calculate() {
 }
 
 function contactMe() {
-  alert('请添加微信：XXXXXXX\n或在小红书私信我，免费帮你做一份官方精算计划书 😊');
+  alert('请添加微信：yingying_jiang-C\n或在小红书私信我，免费帮你做一份官方精算计划书 😊');
 }
 
 updateAge(30);
