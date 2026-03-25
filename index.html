@@ -709,7 +709,7 @@
 
     <!-- Surrender risk warning -->
     <div class="risk-card" id="riskCard">
-      <div class="risk-title">⚠️ 长期持有才能发挥复利威力</div>
+      <div class="risk-title" id="riskTitle">⚠️ 长期持有才能发挥复利威力</div>
       <div class="risk-bar-container">
         <div class="risk-bar-fill loss" id="riskBar" style="width:0%">
           <span id="riskBarText"></span>
@@ -742,9 +742,9 @@
     <div class="card">
       <div class="card-title">
         <span class="icon icon-blue">📊</span>
-        保守 vs 乐观 收益对比
+        <span id="dualTrackTitle">保守 vs 乐观 收益对比</span>
       </div>
-      <p style="font-size:12px;color:var(--text-light);margin-bottom:12px;">
+      <p id="dualTrackDesc" style="font-size:12px;color:var(--text-light);margin-bottom:12px;">
         实际收益通常在两者之间，具体取决于产品选择和市场表现
       </p>
       <div class="dual-track">
@@ -794,9 +794,9 @@
     <div class="card">
       <div class="card-title">
         <span class="icon icon-green">⚖️</span>
-        银行存款 vs 储蓄险
+        <span id="compareTitle">银行存款 vs 储蓄险</span>
       </div>
-      <p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">同样的钱，不同方式差别有多大？</p>
+      <p id="compareDesc" style="font-size:13px;color:var(--text-light);margin-bottom:12px;">同样的钱，不同方式差别有多大？</p>
       <div class="compare-box">
         <div class="compare-item bank">
           <div class="c-label">银行定存</div>
@@ -1076,16 +1076,62 @@ function calculate() {
     (breakevenYear > 0 ? `<strong>第${breakevenYear}年</strong>起预计回本，之后持有越久收益越高<br>` : '') +
     `<strong>建议：</strong>储蓄险是长期理财工具，适合用闲置资金做10年以上的规划，持有时间越长收益越可观`;
 
-  // Summary
+  // Dynamic descriptions based on plan type
   const endAge = age + totalYears;
-  let summaryText;
-  if (planType.startsWith('education')) {
-    summaryText = `预计${endAge}岁时账户总值（含预期红利）`;
-  } else if (planType === 'retirement') {
-    summaryText = `预计${endAge}岁退休时账户总值（含预期红利）`;
-  } else {
-    summaryText = `${totalYears}年后账户总值（含预期红利）`;
-  }
+
+  const sceneText = {
+    education_domestic: {
+      summary: `预计${endAge}岁时教育金总值（含预期红利）`,
+      riskTitle: '⚠️ 教育金需要提前规划，长期持有效果最佳',
+      dualTitle: '孩子的教育金能积累多少？',
+      dualDesc: '越早开始，复利时间越长，同样的投入能为孩子攒下更多教育资金',
+      compareTitle: '银行存教育金 vs 储蓄险存教育金',
+      compareDesc: '同样的钱为孩子存教育基金，不同方式差距多大？',
+    },
+    education_hk: {
+      summary: `预计${endAge}岁时教育金总值（含预期红利）`,
+      riskTitle: '⚠️ 教育金需要提前规划，长期持有效果最佳',
+      dualTitle: '港澳升学资金能积累多少？',
+      dualDesc: '港澳大学学费+生活费约需40-80万，提前用储蓄险规划更轻松',
+      compareTitle: '银行存教育金 vs 储蓄险存教育金',
+      compareDesc: '为孩子港澳升学做准备，不同存法差多少？',
+    },
+    education_overseas: {
+      summary: `预计${endAge}岁时教育金总值（含预期红利）`,
+      riskTitle: '⚠️ 留学资金量大，更需要提前做长期规划',
+      dualTitle: '留学资金能积累多少？',
+      dualDesc: '海外留学总费用约100-300万，越早规划越从容，还能对冲汇率风险',
+      compareTitle: '银行存留学基金 vs 储蓄险存留学基金',
+      compareDesc: '同样的钱为孩子存留学基金，不同方式差距多大？',
+    },
+    wealth: {
+      summary: `${totalYears}年后账户总值（含预期红利）`,
+      riskTitle: '⚠️ 长期持有才能发挥复利威力',
+      dualTitle: '你的财富能增长多少？',
+      dualDesc: '每年存一笔闲钱，让复利帮你打工，时间越长效果越惊人',
+      compareTitle: '银行存款 vs 储蓄险',
+      compareDesc: '同样的钱，不同方式差别有多大？',
+    },
+    retirement: {
+      summary: `预计${endAge}岁时养老金总值（含预期红利）`,
+      riskTitle: '⚠️ 养老金越早准备越轻松',
+      dualTitle: '你的养老金能积累多少？',
+      dualDesc: '退休后每月需要多少生活费？提前规划，让未来的自己不为钱发愁',
+      compareTitle: '银行存养老金 vs 储蓄险存养老金',
+      compareDesc: '为退休做准备，不同存法到时候差多少？',
+    },
+  };
+
+  const scene = sceneText[planType] || sceneText.wealth;
+
+  document.getElementById('riskTitle').innerHTML = scene.riskTitle;
+  document.getElementById('dualTrackTitle').textContent = scene.dualTitle;
+  document.getElementById('dualTrackDesc').textContent = scene.dualDesc;
+  document.getElementById('compareTitle').textContent = scene.compareTitle;
+  document.getElementById('compareDesc').textContent = scene.compareDesc;
+
+  // Summary
+  let summaryText = scene.summary;
 
   document.getElementById('summaryLabel').textContent = summaryText;
   document.getElementById('totalAmount').textContent = formatMoneyFull(oFinal);
