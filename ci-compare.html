@@ -501,7 +501,7 @@
       <div class="age-note" id="ageNote"></div>
 
       <div class="disclaimer">
-        ⚠️ 以上保费为估算数字。仅30岁数据来自官方计划书，其他年龄参考市场经验测算，实际保费以官方计划书为准。保费会因健康状况及核保结果而有所不同。
+        ⚠️ 以上为估算数字，仅供参考。实际保费以核保结果为准，并因个人健康状况有所不同，如需精确报价请联系持牌顾问。
       </div>
     </div>
 
@@ -591,9 +591,16 @@
             <td>终身</td>
           </tr>
           <tr>
-            <td>保费</td>
-            <td>较高约10-15%</td>
-            <td><span class="tag tag-green">更实惠</span></td>
+            <td>具体保障疾病</td>
+            <td colspan="2" style="text-align:center;color:#C0392B;font-size:11px;line-height:1.6;">
+              想了解具体涵盖哪些癌症/早期重疾？<br>
+              <span style="color:#7A7A7A;">私信顾问，免费获取完整保障清单 👇</span>
+            </td>
+          </tr>
+          <tr>
+            <td>保费参考</td>
+            <td>保障更全面，<br>保费相对较高</td>
+            <td>聚焦癌症，<br>保费相对较低</td>
           </tr>
         </tbody>
       </table>
@@ -608,18 +615,51 @@
       <div class="suit-row">
         <div class="suit-card plan-a">
           <div class="suit-title">全面保障型 适合</div>
-          <div class="suit-item">有孩子/备孕的家庭</div>
-          <div class="suit-item">担心老年脑退化症</div>
-          <div class="suit-item">想要最全面多重保障</div>
-          <div class="suit-item">前10年额外保障需求</div>
+          <div class="suit-item">👶 新生儿 / 备孕家庭（儿童专属保障多）</div>
+          <div class="suit-item">想要覆盖更多疾病种类</div>
+          <div class="suit-item">担心脑退化症 / 老年风险</div>
+          <div class="suit-item">希望前10年有升级保障</div>
+          <div class="suit-item">看重全面多重赔付上限</div>
         </div>
         <div class="suit-card plan-b">
           <div class="suit-title">癌症强化型 适合</div>
-          <div class="suit-item">家族有癌症病史</div>
-          <div class="suit-item">预算相对有限</div>
-          <div class="suit-item">特别关注癌症多次赔付</div>
-          <div class="suit-item">想要较低保费</div>
+          <div class="suit-item">🎗 家族有癌症病史</div>
+          <div class="suit-item">特别关注癌症复发保障</div>
+          <div class="suit-item">希望癌症多次赔付更高</div>
+          <div class="suit-item">预算有限但想做重疾保障</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Pre-existing conditions -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon icon-red">❓</span>
+        有基础疾病，还能投保吗？
+      </div>
+      <p style="font-size:13px;color:var(--text-light);line-height:1.7;margin-bottom:14px;">
+        保险公司会根据您如实填写的健康声明进行核保评估，有基础疾病不代表一定不能投保，常见结果有以下几种：
+      </p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:#F0F7F2;border-radius:10px;padding:12px 14px;">
+          <div style="font-size:13px;font-weight:600;color:#27AE60;margin-bottom:4px;">✅ 标准承保</div>
+          <div style="font-size:12px;color:var(--text-light);line-height:1.6;">健康状况良好，以正常保费承保，无额外限制</div>
+        </div>
+        <div style="background:#FFF9E6;border-radius:10px;padding:12px 14px;">
+          <div style="font-size:13px;font-weight:600;color:#E67E22;margin-bottom:4px;">⚡ 附加除外责任</div>
+          <div style="font-size:12px;color:var(--text-light);line-height:1.6;">相关既往症不在保障范围内，其他疾病正常赔付</div>
+        </div>
+        <div style="background:#FFF9E6;border-radius:10px;padding:12px 14px;">
+          <div style="font-size:13px;font-weight:600;color:#E67E22;margin-bottom:4px;">⚡ 加费承保</div>
+          <div style="font-size:12px;color:var(--text-light);line-height:1.6;">保障范围不变，但保费会相应提高</div>
+        </div>
+        <div style="background:#FADBD8;border-radius:10px;padding:12px 14px;">
+          <div style="font-size:13px;font-weight:600;color:#C0392B;margin-bottom:4px;">❌ 暂缓/拒保</div>
+          <div style="font-size:12px;color:var(--text-light);line-height:1.6;">病情较重时保险公司可能暂时无法承保</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px 14px;background:#F4F6F7;border-radius:10px;font-size:12px;color:var(--text-light);line-height:1.7;">
+        💡 <strong>建议越早规划越好</strong>——身体健康时投保，更容易获得标准费率，且保障更全面。如您或家人有健康问题，欢迎私信我，我可以协助评估投保方向。
       </div>
     </div>
 
@@ -750,13 +790,8 @@ function calculate() {
 
   // Age note
   const noteEl = document.getElementById('ageNote');
-  if (age === 30) {
-    noteEl.textContent = '📌 您选择的年龄为30岁，以上保费来自官方计划书，数据准确。';
-    noteEl.style.display = 'block';
-  } else {
-    noteEl.textContent = `📌 ${age}岁保费为基于30岁官方数据推算的估算值，实际以官方计划书为准。`;
-    noteEl.style.display = 'block';
-  }
+  noteEl.textContent = `📌 ${age}岁保费为参考估算，实际保费因个人健康状况及核保结果而有所不同，请联系顾问获取精确报价。`;
+  noteEl.style.display = 'block';
 
   const resultsEl = document.getElementById('results');
   resultsEl.classList.add('show');
