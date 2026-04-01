@@ -405,6 +405,164 @@
     border-radius: 10px;
   }
 
+  /* Pay term selector */
+  .pay-term-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    background: #FEF0EE;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 8px;
+  }
+
+  /* Iceberg */
+  .iceberg-wrap {
+    margin: 16px 0 4px;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .iceberg-sky {
+    background: linear-gradient(180deg, #EBF5FB 0%, #D6EAF8 100%);
+    padding: 16px 16px 8px;
+    position: relative;
+  }
+
+  .iceberg-sky-label {
+    font-size: 11px;
+    color: #2980B9;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .iceberg-tip {
+    background: rgba(255,255,255,0.85);
+    border-radius: 10px 10px 0 0;
+    padding: 12px 14px;
+    margin: 0 20px;
+    text-align: center;
+    border: 1px solid rgba(41,128,185,0.2);
+    border-bottom: none;
+  }
+
+  .iceberg-tip .tip-label {
+    font-size: 12px;
+    color: #2980B9;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .iceberg-tip .tip-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1A5276;
+  }
+
+  .iceberg-tip .tip-sub {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  .wave-divider {
+    background: linear-gradient(135deg, #1A5276, #2471A3);
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1px;
+    position: relative;
+  }
+
+  .wave-divider::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 6'%3E%3Cpath d='M0 3 Q25 0 50 3 Q75 6 100 3 Q125 0 150 3 Q175 6 200 3' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x;
+    background-size: 200px 6px;
+  }
+
+  .iceberg-body {
+    background: linear-gradient(180deg, #1F618D 0%, #154360 100%);
+    padding: 16px;
+  }
+
+  .iceberg-body-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .iceberg-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .iceberg-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .iceberg-item .item-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .iceberg-item .item-text {
+    flex: 1;
+  }
+
+  .iceberg-item .item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 2px;
+  }
+
+  .iceberg-item .item-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+
+  .iceberg-item .item-cost {
+    font-size: 12px;
+    font-weight: 700;
+    color: #F9E79F;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .iceberg-bottom-note {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    line-height: 1.7;
+  }
+
   .footer {
     text-align: center;
     padding: 20px 16px;
@@ -468,6 +626,21 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label class="form-label">
+        缴费年期
+        <span class="form-hint"> — 年期越短，每年保费越高</span>
+      </label>
+      <div class="toggle-group">
+        <button class="toggle-btn" id="btnPay10" onclick="setPayTerm(10)">10年缴</button>
+        <button class="toggle-btn active" id="btnPay20" onclick="setPayTerm(20)">20年缴</button>
+        <button class="toggle-btn" id="btnPayLife" onclick="setPayTerm(0)">终身缴</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:6px;line-height:1.6;">
+        💡 年期短：每年多付，但总缴费年数少；终身缴：每年最少，长期持续缴付
+      </div>
+    </div>
+
     <button class="btn-calculate" onclick="calculate()">立即估算保费</button>
   </div>
 
@@ -495,6 +668,8 @@
           <div class="premium-monthly">约 $<span id="premiumBMonth">0</span>/月</div>
         </div>
       </div>
+
+      <div class="pay-term-label" id="payTermLabel">📅 20年缴</div>
 
       <div class="premium-diff" id="premiumDiff"></div>
 
@@ -599,8 +774,10 @@
           </tr>
           <tr>
             <td>保费参考</td>
-            <td>保障更全面，<br>保费相对较高</td>
-            <td>聚焦癌症，<br>保费相对较低</td>
+            <td colspan="2" style="text-align:center;font-size:11px;color:var(--text-light);line-height:1.7;">
+              因年龄、缴费年期及健康状况不同而有差异<br>
+              可通过上方估算器获取参考数字
+            </td>
           </tr>
         </tbody>
       </table>
@@ -663,6 +840,84 @@
       </div>
     </div>
 
+    <!-- Iceberg -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon icon-blue">🧊</span>
+        重疾真正的代价，远不止医疗费
+      </div>
+      <p style="font-size:13px;color:var(--text-light);line-height:1.7;margin-bottom:4px;">
+        很多人以为重疾只是一笔手术费。但冰山下的隐性负担，才是压垮家庭的真正重量。
+      </p>
+
+      <div class="iceberg-wrap">
+        <!-- Sky / above water -->
+        <div class="iceberg-sky">
+          <div class="iceberg-sky-label">▲ 大多数人看到的部分</div>
+          <div class="iceberg-tip">
+            <div class="tip-label">💊 直接医疗费用</div>
+            <div class="tip-amount">$30,000 ~ $80,000</div>
+            <div class="tip-sub">手术 · 住院 · 药物治疗</div>
+          </div>
+        </div>
+
+        <!-- Water line -->
+        <div class="wave-divider">～～～ 大多数人意识不到的部分 ～～～</div>
+
+        <!-- Body / below water -->
+        <div class="iceberg-body">
+          <div class="iceberg-body-label">▼ 水面以下，更大的隐形负担</div>
+          <div class="iceberg-items">
+            <div class="iceberg-item">
+              <div class="item-icon">💼</div>
+              <div class="item-text">
+                <div class="item-name">收入中断</div>
+                <div class="item-desc">治疗期间无法工作，少则数月，多则数年</div>
+              </div>
+              <div class="item-cost">$50,000+</div>
+            </div>
+            <div class="iceberg-item">
+              <div class="item-icon">👨‍👩‍👧</div>
+              <div class="item-text">
+                <div class="item-name">家人陪护 & 照料</div>
+                <div class="item-desc">家属需辞职或减少工作陪伴照顾</div>
+              </div>
+              <div class="item-cost">$30,000+</div>
+            </div>
+            <div class="iceberg-item">
+              <div class="item-icon">🔄</div>
+              <div class="item-text">
+                <div class="item-name">康复 & 后续治疗</div>
+                <div class="item-desc">物理治疗、复查、特效药，往往持续2-5年</div>
+              </div>
+              <div class="item-cost">$20,000+</div>
+            </div>
+            <div class="iceberg-item">
+              <div class="item-icon">🏠</div>
+              <div class="item-text">
+                <div class="item-name">家庭日常开支不能停</div>
+                <div class="item-desc">房贷、子女学费、生活费，病了也要继续</div>
+              </div>
+              <div class="item-cost">持续支出</div>
+            </div>
+            <div class="iceberg-item">
+              <div class="item-icon">🧠</div>
+              <div class="item-text">
+                <div class="item-name">心理重建费用</div>
+                <div class="item-desc">心理咨询、情绪支持，常被忽视但不可少</div>
+              </div>
+              <div class="item-cost">$5,000+</div>
+            </div>
+          </div>
+          <div class="iceberg-bottom-note">
+            重疾险的赔付金是一笔<strong style="color:#F9E79F;">现金保障</strong><br>
+            让你专心治病，不用为钱焦虑<br>
+            <span style="font-size:11px;opacity:0.7;">赔付后资金如何使用，完全由你决定</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- CTA -->
     <div class="cta-card">
       <div class="cta-avatar">👩‍🏫</div>
@@ -687,6 +942,11 @@
 // ========== State ==========
 let gender = 'male';
 let smoker = 'NS';
+let payTerm = 20; // 10, 20, or 0 (whole-life)
+
+// Pay term multipliers relative to 20-year base
+// Shorter term = higher annual premium; whole-life = lower annual premium
+const PAY_TERM_FACTORS = { 10: 1.72, 20: 1.00, 0: 0.62 };
 
 // ========== Base rates at age 30, $70,000 sum assured, 20-year pay ==========
 // From official plan documents (01/04/2026)
@@ -742,10 +1002,18 @@ function estimatePremium(plan, age, sumAssured) {
   const base30 = getBaseRate(plan);
   const ageFactor = getAgeFactor(age);
   const saRatio = sumAssured / BASE_SA;
-  return Math.round(base30 * ageFactor * saRatio);
+  const termFactor = PAY_TERM_FACTORS[payTerm] || 1.00;
+  return Math.round(base30 * ageFactor * saRatio * termFactor);
 }
 
 // ========== UI ==========
+function setPayTerm(t) {
+  payTerm = t;
+  document.getElementById('btnPay10').classList.toggle('active', t === 10);
+  document.getElementById('btnPay20').classList.toggle('active', t === 20);
+  document.getElementById('btnPayLife').classList.toggle('active', t === 0);
+}
+
 function setGender(g) {
   gender = g;
   document.getElementById('btnMale').classList.toggle('active', g === 'male');
@@ -783,10 +1051,14 @@ function calculate() {
   document.getElementById('premiumB').textContent = formatNum(pB);
   document.getElementById('premiumBMonth').textContent = formatNum(Math.round(pB / 12));
 
+  // Pay term label
+  const termLabels = { 10: '10年缴', 20: '20年缴', 0: '终身缴' };
+  document.getElementById('payTermLabel').textContent = `📅 ${termLabels[payTerm]}`;
+
   const diff = pA - pB;
   const diffPct = Math.round((diff / pB) * 100);
   document.getElementById('premiumDiff').textContent =
-    `全面保障型比癌症强化型每年多约 $${formatNum(diff)}（贵约${diffPct}%）`;
+    `两款保费差距：约 $${formatNum(diff)} / 年（约${diffPct}%）`;
 
   // Age note
   const noteEl = document.getElementById('ageNote');
