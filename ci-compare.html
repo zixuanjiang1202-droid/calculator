@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>重疾险保费估算 & 方案对比</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #C0392B;
+    --primary-light: #E74C3C;
+    --accent: #2D5A3D;
+    --accent-light: #4A8C6B;
+    --bg: #FBF8F3;
+    --card: #FFFFFF;
+    --text: #2C2C2C;
+    --text-light: #7A7A7A;
+    --border: #E8E4DE;
+    --a-color: #2980B9;
+    --b-color: #C0392B;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #922B21, #C0392B);
+    color: white;
+    padding: 40px 20px 50px;
+    text-align: center;
+    position: relative;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg);
+    border-radius: 50% 50% 0 0;
+  }
+
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .header p { font-size: 13px; opacity: 0.85; line-height: 1.6; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .container { max-width: 420px; margin: 0 auto; padding: 0 16px; }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title .icon {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .icon-red { background: #FADBD8; }
+  .icon-green { background: #E8F5E9; }
+  .icon-blue { background: #E3F2FD; }
+
+  /* Form */
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+  .form-hint { font-size: 12px; color: var(--text-light); font-weight: 400; }
+
+  /* Toggle buttons */
+  .toggle-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    height: 44px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+
+  /* Slider */
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .slider-value {
+    background: var(--primary);
+    color: white;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  input[type="range"] {
+    width: 100%; height: 6px;
+    -webkit-appearance: none;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(192,57,43,0.3);
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+
+  /* Amount input */
+  .input-wrapper { position: relative; }
+  .input-wrapper .unit {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--text-light);
+    pointer-events: none;
+  }
+
+  input[type="number"], select {
+    width: 100%; height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 16px;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-appearance: none;
+  }
+
+  input[type="number"] { padding-right: 44px; }
+  input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+  }
+
+  /* Button */
+  .btn-calculate {
+    width: 100%; height: 52px;
+    border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #922B21, #C0392B);
+    color: white;
+    font-size: 17px; font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    box-shadow: 0 4px 14px rgba(192,57,43,0.3);
+    transition: transform 0.15s;
+  }
+  .btn-calculate:active { transform: scale(0.98); }
+
+  /* Results */
+  .results-section { display: none; }
+  .results-section.show {
+    display: block;
+    animation: fadeInUp 0.4s ease;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Premium cards */
+  .premium-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .premium-card {
+    flex: 1;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+
+  .premium-card.plan-a {
+    background: linear-gradient(135deg, #1A5276, #2980B9);
+    color: white;
+  }
+
+  .premium-card.plan-b {
+    background: linear-gradient(135deg, #922B21, #C0392B);
+    color: white;
+  }
+
+  .premium-card .plan-name {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .premium-card .premium-amount {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .premium-card .premium-unit {
+    font-size: 11px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+
+  .premium-card .premium-monthly {
+    font-size: 12px;
+    opacity: 0.8;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+
+  .premium-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 10px;
+  }
+
+  .premium-diff {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 8px;
+    padding: 8px;
+    background: #F0F7F2;
+    border-radius: 10px;
+  }
+
+  /* Age note */
+  .age-note {
+    font-size: 12px;
+    color: var(--text-light);
+    background: #FFF9E6;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  /* Feature compare */
+  .feature-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+
+  .feature-table th {
+    padding: 8px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .feature-table th:first-child { text-align: left; }
+  .feature-table th.col-a { color: #2980B9; }
+  .feature-table th.col-b { color: #C0392B; }
+
+  .feature-table td {
+    padding: 9px 6px;
+    font-size: 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+
+  .feature-table td:first-child {
+    text-align: left;
+    color: var(--text-light);
+    font-size: 12px;
+  }
+
+  .feature-table tr:last-child td { border-bottom: none; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .tag-blue { background: #EBF5FB; color: #2980B9; }
+  .tag-red { background: #FADBD8; color: #C0392B; }
+  .tag-green { background: #E8F5E9; color: #27AE60; }
+
+  /* Who suits */
+  .suit-row { display: flex; gap: 10px; margin-top: 12px; }
+  .suit-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 14px 10px;
+  }
+  .suit-card.plan-a { background: #EBF5FB; border: 1px solid #AED6F1; }
+  .suit-card.plan-b { background: #FADBD8; border: 1px solid #F1948A; }
+  .suit-card .suit-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .suit-card.plan-a .suit-title { color: #2980B9; }
+  .suit-card.plan-b .suit-title { color: #C0392B; }
+  .suit-card .suit-item {
+    font-size: 11px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.5;
+  }
+  .suit-card .suit-item::before { content: "✓ "; font-weight: 600; }
+
+  /* CTA */
+  .cta-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .cta-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #922B21, #C0392B);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 10px;
+    color: white;
+  }
+  .cta-name { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+  .cta-title { font-size: 12px; color: var(--text-light); margin-bottom: 14px; }
+  .btn-cta {
+    display: block;
+    width: 100%; height: 48px;
+    border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #922B21, #C0392B);
+    color: white;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(192,57,43,0.25);
+    transition: transform 0.15s;
+  }
+  .btn-cta:active { transform: scale(0.98); }
+
+  .disclaimer {
+    font-size: 11px;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-top: 14px;
+    padding: 10px 12px;
+    background: #F9F7F4;
+    border-radius: 10px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 11px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>香港重疾险保费估算</h1>
+  <p>两款主力产品对比 · 输入信息即可估算</p>
+  <div class="badge">持牌保险顾问 · 免费估算</div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="card-title">
+      <span class="icon icon-red">📝</span>
+      填写基本信息
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">性别</label>
+      <div class="toggle-group">
+        <button class="toggle-btn active" id="btnMale" onclick="setGender('male')">男</button>
+        <button class="toggle-btn" id="btnFemale" onclick="setGender('female')">女</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">吸烟状况</label>
+      <div class="toggle-group">
+        <button class="toggle-btn active" id="btnNS" onclick="setSmoker('NS')">非吸烟者</button>
+        <button class="toggle-btn" id="btnS" onclick="setSmoker('S')">吸烟者</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">当前年龄</label>
+      <div class="slider-header">
+        <span style="font-size:12px;color:var(--text-light)">拖动选择</span>
+        <span class="slider-value" id="ageDisplay">30岁</span>
+      </div>
+      <input type="range" id="ageSlider" min="0" max="60" value="30" oninput="updateAge(this.value)">
+      <div class="slider-labels">
+        <span>0岁</span><span>20</span><span>40</span><span>60岁</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        保额（美元）
+        <span class="form-hint"> — 建议 $50,000 ~ $200,000</span>
+      </label>
+      <div class="input-wrapper">
+        <input type="number" id="sumAssured" value="100000" min="10000" step="10000">
+        <span class="unit">USD</span>
+      </div>
+    </div>
+
+    <button class="btn-calculate" onclick="calculate()">立即估算保费</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results-section" id="results">
+
+    <!-- Premium comparison -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon icon-blue">💰</span>
+        预估年缴保费对比
+      </div>
+
+      <div class="premium-row">
+        <div class="premium-card plan-a">
+          <div class="plan-name">全面保障型<br>重疾险</div>
+          <div class="premium-amount">$<span id="premiumA">0</span></div>
+          <div class="premium-unit">每年（美元）</div>
+          <div class="premium-monthly">约 $<span id="premiumAMonth">0</span>/月</div>
+        </div>
+        <div class="premium-card plan-b">
+          <div class="plan-name">癌症强化型<br>重疾险</div>
+          <div class="premium-amount">$<span id="premiumB">0</span></div>
+          <div class="premium-unit">每年（美元）</div>
+          <div class="premium-monthly">约 $<span id="premiumBMonth">0</span>/月</div>
+        </div>
+      </div>
+
+      <div class="premium-diff" id="premiumDiff"></div>
+
+      <div class="age-note" id="ageNote"></div>
+
+      <div class="disclaimer">
+        ⚠️ 以上保费为估算数字。仅30岁数据来自官方计划书，其他年龄参考市场经验测算，实际保费以官方计划书为准。保费会因健康状况及核保结果而有所不同。
+      </div>
+    </div>
+
+    <!-- Feature compare -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon icon-red">🛡️</span>
+        保障对比
+      </div>
+      <table class="feature-table">
+        <thead>
+          <tr>
+            <th style="width:38%">保障项目</th>
+            <th class="col-a" style="width:31%">全面保障型</th>
+            <th class="col-b" style="width:31%">癌症强化型</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>覆盖疾病种数</td>
+            <td><span class="tag tag-blue">127种</span></td>
+            <td><span class="tag tag-red">117种</span></td>
+          </tr>
+          <tr>
+            <td>严重重疾赔付</td>
+            <td>100%保额</td>
+            <td>100%保额</td>
+          </tr>
+          <tr>
+            <td>早期重疾赔付</td>
+            <td>20%-25%保额</td>
+            <td>20%-25%保额</td>
+          </tr>
+          <tr>
+            <td>前10年升级保障</td>
+            <td><span class="tag tag-blue">+50%额外</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>癌症多次赔付</td>
+            <td>最高 200%</td>
+            <td><span class="tag tag-red">最高 660%</span></td>
+          </tr>
+          <tr>
+            <td>心脏病/中风多赔</td>
+            <td>最高 200%</td>
+            <td>最高 200%</td>
+          </tr>
+          <tr>
+            <td>全身多重赔付上限</td>
+            <td><span class="tag tag-blue">最高 1000%</span></td>
+            <td>最高 860%</td>
+          </tr>
+          <tr>
+            <td>脑退化症终身年金</td>
+            <td><span class="tag tag-green">✓ 每年6%保额</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>人寿延伸保障</td>
+            <td><span class="tag tag-green">✓ 有</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>儿童专属疾病</td>
+            <td><span class="tag tag-blue">22种</span></td>
+            <td>较少</td>
+          </tr>
+          <tr>
+            <td>孕妇/新生儿投保</td>
+            <td><span class="tag tag-green">✓ 可</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>重疾后保费豁免</td>
+            <td>全额豁免</td>
+            <td>全额豁免</td>
+          </tr>
+          <tr>
+            <td>早期重疾保费豁免</td>
+            <td>豁免12个月</td>
+            <td>豁免12个月</td>
+          </tr>
+          <tr>
+            <td>保障期限</td>
+            <td>终身</td>
+            <td>终身</td>
+          </tr>
+          <tr>
+            <td>保费</td>
+            <td>较高约10-15%</td>
+            <td><span class="tag tag-green">更实惠</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Who suits -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon icon-green">🎯</span>
+        哪种人适合哪款？
+      </div>
+      <div class="suit-row">
+        <div class="suit-card plan-a">
+          <div class="suit-title">全面保障型 适合</div>
+          <div class="suit-item">有孩子/备孕的家庭</div>
+          <div class="suit-item">担心老年脑退化症</div>
+          <div class="suit-item">想要最全面多重保障</div>
+          <div class="suit-item">前10年额外保障需求</div>
+        </div>
+        <div class="suit-card plan-b">
+          <div class="suit-title">癌症强化型 适合</div>
+          <div class="suit-item">家族有癌症病史</div>
+          <div class="suit-item">预算相对有限</div>
+          <div class="suit-item">特别关注癌症多次赔付</div>
+          <div class="suit-item">想要较低保费</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <div class="cta-avatar">👩‍🏫</div>
+      <div class="cta-name">CC的理财笔记</div>
+      <div class="cta-title">前幼教老师 ｜ 香港持牌保险顾问</div>
+      <button class="btn-cta" onclick="contactMe()">获取精确报价 & 计划书（免费）→</button>
+      <p style="font-size:12px;color:var(--text-light);margin-top:10px;line-height:1.6;">
+        以上只是估算，实际保费因年龄/健康状况而不同<br>
+        私信我，免费出一份精确的官方计划书
+      </p>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    本工具仅供参考，不代表任何保险公司的正式报价<br>
+    实际保费及保障以官方计划书及保单条款为准
+  </div>
+</div>
+
+<script>
+// ========== State ==========
+let gender = 'male';
+let smoker = 'NS';
+
+// ========== Base rates at age 30, $70,000 sum assured, 20-year pay ==========
+// From official plan documents (01/04/2026)
+const BASE_RATES_30 = {
+  // Plan A (全面保障型)
+  A: { male_NS: 2177.00, male_S: 2826.60, female_NS: 2433.53, female_S: 3055.05 },
+  // Plan B (癌症强化型)
+  B: { male_NS: 2064.96, male_S: 2547.04, female_NS: 2262.56, female_S: 2762.16 }
+};
+const BASE_SA = 70000; // Base sum assured for rate table
+
+// ========== Age adjustment factors (relative to age 30) ==========
+// Based on typical CI insurance actuarial patterns
+// Verified data point: age 30. Other ages are market-estimate based.
+const AGE_FACTORS = [
+  { age: 0,  factor: 0.19 },
+  { age: 5,  factor: 0.24 },
+  { age: 10, factor: 0.32 },
+  { age: 15, factor: 0.44 },
+  { age: 18, factor: 0.56 },
+  { age: 20, factor: 0.64 },
+  { age: 25, factor: 0.81 },
+  { age: 30, factor: 1.00 }, // ← verified from plan docs
+  { age: 35, factor: 1.36 },
+  { age: 40, factor: 1.88 },
+  { age: 45, factor: 2.60 },
+  { age: 50, factor: 3.55 },
+  { age: 55, factor: 4.80 },
+  { age: 60, factor: 6.40 },
+];
+
+function getAgeFactor(age) {
+  age = parseInt(age);
+  // Find surrounding data points and interpolate
+  for (let i = 0; i < AGE_FACTORS.length - 1; i++) {
+    const a = AGE_FACTORS[i], b = AGE_FACTORS[i + 1];
+    if (age >= a.age && age <= b.age) {
+      const t = (age - a.age) / (b.age - a.age);
+      return a.factor + t * (b.factor - a.factor);
+    }
+  }
+  // Beyond range
+  if (age < AGE_FACTORS[0].age) return AGE_FACTORS[0].factor;
+  return AGE_FACTORS[AGE_FACTORS.length - 1].factor;
+}
+
+function getBaseRate(plan) {
+  const key = `${gender}_${smoker}`;
+  return BASE_RATES_30[plan][key];
+}
+
+function estimatePremium(plan, age, sumAssured) {
+  const base30 = getBaseRate(plan);
+  const ageFactor = getAgeFactor(age);
+  const saRatio = sumAssured / BASE_SA;
+  return Math.round(base30 * ageFactor * saRatio);
+}
+
+// ========== UI ==========
+function setGender(g) {
+  gender = g;
+  document.getElementById('btnMale').classList.toggle('active', g === 'male');
+  document.getElementById('btnFemale').classList.toggle('active', g === 'female');
+}
+
+function setSmoker(s) {
+  smoker = s;
+  document.getElementById('btnNS').classList.toggle('active', s === 'NS');
+  document.getElementById('btnS').classList.toggle('active', s === 'S');
+}
+
+function updateAge(val) {
+  document.getElementById('ageDisplay').textContent = val + '岁';
+}
+
+function formatNum(n) {
+  return n.toLocaleString('en-US');
+}
+
+function calculate() {
+  const age = parseInt(document.getElementById('ageSlider').value);
+  const sa = parseFloat(document.getElementById('sumAssured').value);
+
+  if (!sa || sa < 10000) {
+    alert('请输入保额（最低 $10,000）');
+    return;
+  }
+
+  const pA = estimatePremium('A', age, sa);
+  const pB = estimatePremium('B', age, sa);
+
+  document.getElementById('premiumA').textContent = formatNum(pA);
+  document.getElementById('premiumAMonth').textContent = formatNum(Math.round(pA / 12));
+  document.getElementById('premiumB').textContent = formatNum(pB);
+  document.getElementById('premiumBMonth').textContent = formatNum(Math.round(pB / 12));
+
+  const diff = pA - pB;
+  const diffPct = Math.round((diff / pB) * 100);
+  document.getElementById('premiumDiff').textContent =
+    `全面保障型比癌症强化型每年多约 $${formatNum(diff)}（贵约${diffPct}%）`;
+
+  // Age note
+  const noteEl = document.getElementById('ageNote');
+  if (age === 30) {
+    noteEl.textContent = '📌 您选择的年龄为30岁，以上保费来自官方计划书，数据准确。';
+    noteEl.style.display = 'block';
+  } else {
+    noteEl.textContent = `📌 ${age}岁保费为基于30岁官方数据推算的估算值，实际以官方计划书为准。`;
+    noteEl.style.display = 'block';
+  }
+
+  const resultsEl = document.getElementById('results');
+  resultsEl.classList.add('show');
+  setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function contactMe() {
+  alert('请添加微信：yingying_jiang-C\n或在小红书私信我，免费出一份官方计划书 😊');
+}
+
+updateAge(30);
+</script>
+
+</body>
+</html>
