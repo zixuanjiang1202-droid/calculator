@@ -633,11 +633,12 @@
       </label>
       <div class="toggle-group">
         <button class="toggle-btn" id="btnPay10" onclick="setPayTerm(10)">10年缴</button>
+        <button class="toggle-btn" id="btnPay15" onclick="setPayTerm(15)">15年缴</button>
         <button class="toggle-btn active" id="btnPay20" onclick="setPayTerm(20)">20年缴</button>
-        <button class="toggle-btn" id="btnPayLife" onclick="setPayTerm(0)">终身缴</button>
+        <button class="toggle-btn" id="btnPay25" onclick="setPayTerm(25)">25年缴</button>
       </div>
       <div style="font-size:11px;color:var(--text-light);margin-top:6px;line-height:1.6;">
-        💡 年期短：每年多付，但总缴费年数少；终身缴：每年最少，长期持续缴付
+        💡 年期越短，每年保费越高，总缴款额相近
       </div>
     </div>
 
@@ -942,11 +943,11 @@
 // ========== State ==========
 let gender = 'male';
 let smoker = 'NS';
-let payTerm = 20; // 10, 20, or 0 (whole-life)
+let payTerm = 20; // 10, 15, 20, or 25 years
 
 // Pay term multipliers relative to 20-year base
-// Shorter term = higher annual premium; whole-life = lower annual premium
-const PAY_TERM_FACTORS = { 10: 1.72, 20: 1.00, 0: 0.62 };
+// Shorter term = higher annual premium
+const PAY_TERM_FACTORS = { 10: 1.72, 15: 1.28, 20: 1.00, 25: 0.80 };
 
 // ========== Base rates at age 30, $70,000 sum assured, 20-year pay ==========
 // From official plan documents (01/04/2026)
@@ -1010,8 +1011,9 @@ function estimatePremium(plan, age, sumAssured) {
 function setPayTerm(t) {
   payTerm = t;
   document.getElementById('btnPay10').classList.toggle('active', t === 10);
+  document.getElementById('btnPay15').classList.toggle('active', t === 15);
   document.getElementById('btnPay20').classList.toggle('active', t === 20);
-  document.getElementById('btnPayLife').classList.toggle('active', t === 0);
+  document.getElementById('btnPay25').classList.toggle('active', t === 25);
 }
 
 function setGender(g) {
@@ -1052,7 +1054,7 @@ function calculate() {
   document.getElementById('premiumBMonth').textContent = formatNum(Math.round(pB / 12));
 
   // Pay term label
-  const termLabels = { 10: '10年缴', 20: '20年缴', 0: '终身缴' };
+  const termLabels = { 10: '10年缴', 15: '15年缴', 20: '20年缴', 25: '25年缴' };
   document.getElementById('payTermLabel').textContent = `📅 ${termLabels[payTerm]}`;
 
   const diff = pA - pB;
